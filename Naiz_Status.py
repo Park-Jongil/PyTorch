@@ -66,14 +66,16 @@ def main():
                 if (item.tag == 'LowStreamConnection') :      
                     LowStreamConnection = item.text  
             print("UniqueKey = " + UniqueKey)
-            print("HighStreamConnection  = " + HighStreamConnection)
-            print("LowStreamConnection   = " + LowStreamConnection)
+#            print("HighStreamConnection  = " + HighStreamConnection)
+#            print("LowStreamConnection   = " + LowStreamConnection)
             if (HighStreamConnection=='1') and (LowStreamConnection=='1')  :
                 isAlive = isAlive + 1   
                 isCheckAlive = 1
             iPrevStatus = select_status_by_key( conn , int(UniqueKey) )
             if (iPrevStatus != isCheckAlive) :
-                print(" 상태값 변이가 발생함 ")
+                print(" 상태값 변이가 발생함 Key = " + int(UniqueKey) )
+                print("   Prev = " + iPrevStatus ) 
+                print("   Current = " + isCheckAlive )                
                 update_status_by_key( conn , int(UniqueKey) , isCheckAlive )
             iCount = iCount + 1
 
