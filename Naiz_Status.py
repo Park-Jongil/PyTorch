@@ -1,5 +1,6 @@
 import urllib.request
 import xml.etree.ElementTree as ET
+import socket
 import sqlite3
 from sqlite3 import Error
 
@@ -40,10 +41,21 @@ def update_status_by_key(conn, key , status):
     cur.execute("UPDATE CameraList SET status=? WHERE seq=?", (status, key))        
     conn.commit()
 
+def TcpSocket_AlarmNotify_Status(ip_Addr,port,CamKey,CamStatus):
+    try :
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.connect(( ip_Addr , port ))
+        SendMsg = CamKey + "," + CamStatus
+        sock.send( SendMsg )
+    except :
+        print(" TCP/IP 통신에러 ")
+
 
 def main():
     database = "NaizDB.db"
     naiz_url = 'http://naiz.re.kr:8001/event/status.cgi?id=admin&password=admin&key=all&method=get'
+    Notify_Addr = "127.0.0.1"
+    Notify_Port = 9990
 
     conn = create_connection(database)
 
@@ -77,6 +89,8 @@ def main():
                 print("   Prev = " + iPrevStatus ) 
                 print("   Current = " + iCurrStatus )                
                 update_status_by_key( conn , int(UniqueKey) , iCurrStatus )
+                if (Notify_Addr != "") :
+                    TcpSocket_AlarmNotify_Status(Notify_Addr,Notify_Port,UniqueKey,iCurrStatus)
             iCount = iCount + 1
 
     print("\n전체갯수 = " + str(iCount))
