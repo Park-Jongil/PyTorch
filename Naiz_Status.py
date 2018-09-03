@@ -57,7 +57,7 @@ def main():
         for sub in child :
             HighStreamConnection = '0'
             LowStreamConnection  = '0'
-            isCheckAlive = 0
+            iCurrStatus = 0
             for item in sub :
                 if (item.tag == 'Key') :      
                     UniqueKey = item.text
@@ -70,13 +70,13 @@ def main():
 #            print("LowStreamConnection   = " + LowStreamConnection)
             if (HighStreamConnection=='1') and (LowStreamConnection=='1')  :
                 isAlive = isAlive + 1   
-                isCheckAlive = 1
+                iCurrStatus = 1
             iPrevStatus = select_status_by_key( conn , int(UniqueKey) )
-            if (iPrevStatus != isCheckAlive) :
+            if (iPrevStatus != iCurrStatus) :
                 print(" 상태값 변이가 발생함 Key = " + int(UniqueKey) )
                 print("   Prev = " + iPrevStatus ) 
-                print("   Current = " + isCheckAlive )                
-                update_status_by_key( conn , int(UniqueKey) , isCheckAlive )
+                print("   Current = " + iCurrStatus )                
+                update_status_by_key( conn , int(UniqueKey) , iCurrStatus )
             iCount = iCount + 1
 
     print("\n전체갯수 = " + str(iCount))
